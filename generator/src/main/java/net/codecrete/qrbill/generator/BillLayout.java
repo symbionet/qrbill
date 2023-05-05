@@ -40,7 +40,7 @@ class BillLayout {
 
 
     private final Bill bill;
-    private final QRCode qrCode;
+    private final QRCodeDrawer qrCode;
     private final Canvas graphics;
 
     private final double additionalLeftMargin;
@@ -66,9 +66,9 @@ class BillLayout {
     private double extraSpacing;
 
 
-    BillLayout(Bill bill, Canvas graphics) {
+    BillLayout(Bill bill, Canvas graphics, QRCodeDrawer qrCode) {
         this.bill = bill;
-        this.qrCode = new QRCode(bill);
+        this.qrCode = qrCode;
         this.graphics = graphics;
         this.additionalLeftMargin = Math.min(Math.max(bill.getFormat().getMarginLeft(), 5.0), 12.0) - MARGIN;
         this.additionalRightMargin = Math.min(Math.max(bill.getFormat().getMarginRight(), 5.0), 12.0) - MARGIN;

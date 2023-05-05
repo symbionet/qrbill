@@ -6,13 +6,13 @@
 //
 package net.codecrete.qrbill.generator;
 
+import java.io.IOException;
 import net.codecrete.qrbill.canvas.ByteArrayResult;
 import net.codecrete.qrbill.canvas.Canvas;
 import net.codecrete.qrbill.canvas.PDFCanvas;
 import net.codecrete.qrbill.canvas.PNGCanvas;
 import net.codecrete.qrbill.canvas.SVGCanvas;
-
-import java.io.IOException;
+import net.codecrete.qrbill.generator.Bill.QrCodeVersion;
 
 /**
  * Generates Swiss QR bill payment part.
@@ -204,7 +204,7 @@ public class QRBill {
         Bill bill = new Bill();
         bill.setFormat(format);
 
-        BillLayout layout = new BillLayout(bill, canvas);
+        BillLayout layout = new BillLayout(bill, canvas, getQrCodeDrawer(bill));
         try {
             layout.drawBorder();
         } catch (IOException e) {
@@ -219,20 +219,24 @@ public class QRBill {
             throw new QRBillValidationError(result);
 
         if (bill.getFormat().getOutputSize() == OutputSize.QR_CODE_ONLY) {
-            QRCode qrCode = new QRCode(cleanedBill);
+            QRCodeDrawer qrCode = getQrCodeDrawer(cleanedBill);
             qrCode.draw(canvas, 0, 0);
 
         } else if (bill.getFormat().getOutputSize() == OutputSize.QR_CODE_WITH_QUIET_ZONE) {
-                QRCode qrCode = new QRCode(cleanedBill);
-                canvas.startPath();
-                canvas.addRectangle(0, 0, QR_CODE_WITH_QUIET_ZONE_WIDTH, QR_CODE_WITH_QUIET_ZONE_HEIGHT);
-                canvas.fillPath(0xffffff, false);
-                qrCode.draw(canvas, 5, 5);
+            QRCodeDrawer qrCode = getQrCodeDrawer(cleanedBill);
+            canvas.startPath();
+            canvas.addRectangle(0, 0, QR_CODE_WITH_QUIET_ZONE_WIDTH, QR_CODE_WITH_QUIET_ZONE_HEIGHT);
+            canvas.fillPath(0xffffff, false);
+            qrCode.draw(canvas, 5, 5);
 
         } else {
-            BillLayout layout = new BillLayout(cleanedBill, canvas);
+            BillLayout layout = new BillLayout(cleanedBill, canvas, getQrCodeDrawer(cleanedBill));
             layout.draw();
         }
+    }
+
+    private static QRCodeDrawer getQrCodeDrawer(Bill bill) {
+        return bill.getQrCodeVersion() == QrCodeVersion.EU ? new GiroCode(bill) : new QRCode(bill);
     }
 
     /**
