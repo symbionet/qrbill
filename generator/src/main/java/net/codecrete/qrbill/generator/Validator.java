@@ -47,6 +47,7 @@ class Validator {
         billOut.setFormat(billIn.getFormat() != null ? new BillFormat(billIn.getFormat()) : null);
         billOut.setVersion(billIn.getVersion());
         billOut.setQrCodeVersion(billIn.getQrCodeVersion());
+        billOut.setAccountBIC(billIn.getAccountBIC());
 
         validateAccountNumber();
         validateCreditor();
