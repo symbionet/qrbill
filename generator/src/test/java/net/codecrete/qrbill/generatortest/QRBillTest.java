@@ -7,6 +7,7 @@
 package net.codecrete.qrbill.generatortest;
 
 import net.codecrete.qrbill.generator.Bill;
+import net.codecrete.qrbill.generator.Bill.QrCodeVersion;
 import net.codecrete.qrbill.generator.GraphicsFormat;
 import net.codecrete.qrbill.generator.Language;
 import net.codecrete.qrbill.generator.OutputSize;
@@ -84,5 +85,16 @@ class QRBillTest {
         bill.getFormat().setGraphicsFormat(GraphicsFormat.SVG);
         byte[] svg = QRBill.generate(bill);
         FileComparison.assertFileContentsEqual(svg, "qrbill_li.svg");
+    }
+
+    @Test
+    void createGiroCodeBill1() {
+        Bill bill = SampleData.getExample1();
+        bill.setQrCodeVersion(QrCodeVersion.EU);
+        bill.setAccountBIC("UBSWCHZH80A");
+        bill.getFormat().setOutputSize(OutputSize.QR_BILL_ONLY);
+        bill.getFormat().setGraphicsFormat(GraphicsFormat.SVG);
+        byte[] svg = QRBill.generate(bill);
+        FileComparison.assertFileContentsEqual(svg, "gcbill_ex1.svg");
     }
 }

@@ -42,14 +42,22 @@ public class Bill implements Serializable {
         V2_0
     }
 
+    public enum QrCodeVersion {
+        CH, EU
+    }
+
     /** Version of QR bill standard */
     private Version version = Version.V2_0;
+    /** Qr Code version */
+    private QrCodeVersion qrCodeVersion = QrCodeVersion.CH;
     /** Payment amount */
     private BigDecimal amount = null;
     /** Payment currency (ISO code) */
     private String currency = "CHF";
     /** Creditor's account number */
     private String account = null;
+    /** Creditor's account number */
+    private String accountBIC = null;
     /** Creditor address */
     private Address creditor = new Address();
     /** Payment reference type */
@@ -161,6 +169,14 @@ public class Bill implements Serializable {
      */
     public String getAccount() {
         return account;
+    }
+
+    public String getAccountBIC() {
+        return accountBIC;
+    }
+
+    public void setAccountBIC(String accountBIC) {
+        this.accountBIC = accountBIC;
     }
 
     /**
@@ -403,6 +419,14 @@ public class Bill implements Serializable {
      */
     public void setFormat(BillFormat format) {
         this.format = format;
+    }
+
+    public void setQrCodeVersion(QrCodeVersion qrCodeVersion) {
+        this.qrCodeVersion = qrCodeVersion;
+    }
+
+    public QrCodeVersion getQrCodeVersion() {
+        return this.qrCodeVersion;
     }
 
     /**
